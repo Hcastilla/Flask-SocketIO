@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+    <script src="/static/modalF.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.2/p5.min.js" charset="utf-8"></script>
+    <title>Social Drawing</title>
+
+    <style>
+        input[type="color"]{
+            width: 20px;
+            height: 20px;
+            border-radius: 100%;
+            background-color: white;
+            border: none;
+        }
+
+        form{
+            padding: 5px;
+        }
+
+        .m-modal{
+            display: none;
+        }
+        canvas{
+            cursor: none;
+        }
+    </style>
+
+</head>
+
+<body class="teal">
+    <div class="row">
+        <div class="col l12 s12 m12 center">
+            <h1 class="white-text">Social Drawing</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col m6 s8 l4 white offset-l4 offset-m3 offset-s2 z-depth-2">
+            <form class="center">
+                <div class="row">
+                    <div class="col l10 m10 s12 offset-l1 offset-m1 ">
+                        <input type="text" class="center" placeholder="Nickname" required >
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col l12 m12 s12">
+                        <input type="color">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col l12 m12 s12 center">
+                        <button type="submit" class="btn red m-open" m-open="canvas">Entrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="m-modal" m-modal="canvas">
+        <div class="m-body" id="canvas"></div>
+    </div>
+   
+    <script type="text/javascript">
+        'use strict';
+        let usuarios = [];
+        let myUser = {};
+        let points = [];
+        let socket;
+        $(document).ready(function(){
+            socket = io.connect('http://' + document.domain + ':' + location.port);
+
+            $('form').on('submit', function(e){
+                e.preventDefault();
+
+                let nombre = $('input[type="text"]').val();
+                let color = $('input[type="color"]').val();
+
+                myUser = {
+                    nombre:nombre, 
+                    color:color, 
+                    x:Math.random() * $(window).width(),
+                    y:Math.random() * $(window).height(),
+                    id:socket.id
+                };
+                
+                $('.m-open').modalF({color:"#333"});
+                $('button').trigger('click');
+                
+                socket.emit('addUsuario', myUser);
+               
+            });
+            socket.on('usuarios', function(data){
+                usuarios = data;
+            });
+
+            socket.on('points', function(data){
+                points = data;
+            });
+            
+        });
+
+        function setup(){
+            let c = createCanvas(windowWidth, windowHeight);
+            c.parent('canvas');
+            noStroke();
+        }
+
+        function draw(){
+            background('#333');
+            $.each(usuarios, function(index, u) {
+                fill(u.color);
+                text(u.nombre, u.x, u.y);
+            });
+
+            $.each(points, function(index, p) {
+                fill(p.color);
+                ellipse(p.x, p.y, 1, 1);
+            });
+            if (mouseIsPressed) {
+                if (usuarios.length > 0 && myUser.color) {
+                    socket.emit('drawPoint', {x:mouseX, y:mouseY, color:myUser.color})
+                }
+                
+            }
+        }
+
+        function mouseMoved(){
+            if (usuarios.length > 0) {
+                myUser.x = mouseX;
+                myUser.y = mouseY;
+                socket.emit('updateUsuario', myUser);
+            }
+        }
+
+        function touchMoved(){
+            if (usuarios.length > 0 && myUser.color) {
+                myUser.x = touchX;
+                myUser.y = touchY;
+                socket.emit('updateUsuario', myUser);
+                socket.emit('drawPoint', {x:mouseX, y:mouseY, color:myUser.color});
+            }
+        }
+
+        function windowResized() {
+          resizeCanvas(windowWidth, windowHeight);
+        }
+        
+    </script>
+
+</body>
+</html>
