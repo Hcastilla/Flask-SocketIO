@@ -124,28 +124,14 @@
 
             $.each(points, function(index, p) {
                 fill(p.color);
-                ellipse(p.x, p.y, 1, 1);
+                ellipse(p.x, p.y, 5, 5);
             });
-            if (mouseIsPressed) {
-                if (usuarios.length > 0 && myUser.color) {
-                    socket.emit('drawPoint', {x:mouseX, y:mouseY, color:myUser.color})
-                }
-                
-            }
         }
 
         function mouseMoved(){
             if (usuarios.length > 0) {
                 myUser.x = mouseX;
                 myUser.y = mouseY;
-                socket.emit('updateUsuario', myUser);
-            }
-        }
-
-        function touchMoved(){
-            if (usuarios.length > 0 && myUser.color) {
-                myUser.x = touchX;
-                myUser.y = touchY;
                 socket.emit('updateUsuario', myUser);
                 socket.emit('drawPoint', {x:mouseX, y:mouseY, color:myUser.color});
             }
