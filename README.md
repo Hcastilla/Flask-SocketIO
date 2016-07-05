@@ -2,9 +2,9 @@
 Pizarra de dibujo social utilizando  Flask + SocketIO
 
 # Instalacion
-git clone https://github.com/Hcastilla/Flask-SocketIO
-virtualenv Flask-SocketIO
-pip install -r requirements.txt
+1. git clone https://github.com/Hcastilla/Flask-SocketIO
+2. virtualenv Flask-SocketIO
+3. pip install -r requirements.txt
 
 
 # python run.py
