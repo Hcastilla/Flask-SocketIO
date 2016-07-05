@@ -8,3 +8,4 @@ Pizarra de dibujo social utilizando  Flask + SocketIO
 
 
 # python run.py
+http://localhost:7000/
