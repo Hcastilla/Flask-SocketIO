@@ -8,5 +8,5 @@ Pizarra de dibujo social utilizando  Flask + SocketIO
 
 
 # python run.py
-[I'm an inline-style link](http://localhost:7000/)
+[http://localhost:7000](http://localhost:7000/)
 
