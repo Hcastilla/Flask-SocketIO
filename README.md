@@ -1,5 +1,7 @@
 # Flask-SocketIO
-Pizarra de dibujo social utilizando  Flask + SocketIO
+Pizarra de dibujo social utilizando  Flask + SocketIO (p5js para el canvas)
+
+
 
 # Instalacion
 1. git clone https://github.com/Hcastilla/Flask-SocketIO
