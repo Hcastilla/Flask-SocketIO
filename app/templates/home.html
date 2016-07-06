@@ -22,11 +22,9 @@
             background-color: white;
             border: none;
         }
-
         form{
             padding: 5px;
         }
-
         .m-modal{
             display: none;
         }
@@ -78,13 +76,10 @@
         let socket;
         $(document).ready(function(){
             socket = io.connect('http://' + document.domain + ':' + location.port);
-
             $('form').on('submit', function(e){
                 e.preventDefault();
-
                 let nombre = $('input[type="text"]').val();
                 let color = $('input[type="color"]').val();
-
                 myUser = {
                     nombre:nombre, 
                     color:color, 
@@ -102,32 +97,27 @@
             socket.on('usuarios', function(data){
                 usuarios = data;
             });
-
             socket.on('points', function(data){
                 points = data;
             });
             
         });
-
         function setup(){
             let c = createCanvas(windowWidth, windowHeight);
             c.parent('canvas');
             noStroke();
         }
-
         function draw(){
             background('#333');
             $.each(usuarios, function(index, u) {
                 fill(u.color);
                 text(u.nombre, u.x, u.y);
             });
-
             $.each(points, function(index, p) {
                 fill(p.color);
                 ellipse(p.x, p.y, 5, 5);
             });
         }
-
         function mouseMoved(){
             if (usuarios.length > 0) {
                 myUser.x = mouseX;
@@ -136,7 +126,6 @@
                 socket.emit('drawPoint', {x:mouseX, y:mouseY, color:myUser.color});
             }
         }
-
         function windowResized() {
           resizeCanvas(windowWidth, windowHeight);
         }

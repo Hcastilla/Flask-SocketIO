@@ -15,10 +15,6 @@ points = []
 def connect():
 	print('usuario Conectado')
 
-@socketio.on('createId')
-def crateId():
-	emit('createId', len(usuarios))
-
 @socketio.on('addUsuario')
 def addUsuario(usuario):
 	usuarios.append(usuario)
@@ -36,4 +32,3 @@ def updateUsuario(user):
 def drawPoint(p):
 	points.append(p)
 	emit('points', points, broadcast=True)
-
