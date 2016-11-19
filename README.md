@@ -8,8 +8,7 @@ Pizarra de dibujo social utilizando  Flask + SocketIO (p5js para el canvas)
 2. virtualenv Flask-SocketIO
 3. cd Flask-SocketIO
 4. pip install -r requirements.txt
-5. source bin/activate
-6. python run.py
-7. [http://localhost:7000](http://localhost:7000/)
+5. python run.py
+6. [http://localhost:7000](http://localhost:7000/)
 
 
